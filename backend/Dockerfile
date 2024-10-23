@@ -3,8 +3,9 @@ VOLUME /tmp
 ARG JAVA_OPTS
 ENV JAVA_OPTS=$JAVA_OPTS
 
-# Create a non-root user and group
-RUN groupadd -r appuser && useradd -r -g appuser -u 10014 appuser
+# Create a new user with UID 10014
+RUN addgroup -g 10014 choreo && \
+    adduser  --disabled-password  --no-create-home --uid 10014 --ingroup choreo choreouser
 
 # Copy the application JAR file
 COPY target/backend-0.0.1-SNAPSHOT.jar dockerimage.jar
@@ -16,7 +17,7 @@ RUN chown appuser:appuser dockerimage.jar
 EXPOSE 8080
 
 # Switch to the non-root user
-USER appuser
+USER 10014
 
 # Set the entry point
 ENTRYPOINT exec java $JAVA_OPTS -jar dockerimage.jar
