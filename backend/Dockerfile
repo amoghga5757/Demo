@@ -1,3 +1,13 @@
+# Stage 1: Build the application using Maven
+FROM maven:3.8.7-eclipse-temurin-19-alpine AS build
+
+# Set the working directory
+ADD . /app
+WORKDIR /app
+
+# Run Maven build
+RUN mvn clean install
+
 # Use OpenJDK 21 as the base image
 FROM openjdk:21-jdk
 
@@ -12,16 +22,11 @@ ENV JAVA_OPTS=$JAVA_OPTS
 RUN groupadd -g 10014 choreo && \
     useradd --no-log-init --no-create-home --uid 10014 --gid 10014 choreouser
 
-# Set the working directory
-ADD . /app
-WORKDIR /app
+
 
 # Copy the Maven project files to the working directory
 COPY pom.xml ./
 COPY src ./src
-
-# # Run Maven build
-# RUN mvn clean install
 
 # Copy the application JAR file to the final image
 COPY target/backend-0.0.1-SNAPSHOT.jar dockerimage.jar
