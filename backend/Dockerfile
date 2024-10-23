@@ -6,7 +6,7 @@ ADD . /app
 WORKDIR /app
 
 # Run Maven build
-RUN mvn clean install
+RUN mvn clean package
 
 # Use OpenJDK 21 as the base image
 FROM openjdk:21-jdk
