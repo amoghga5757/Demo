@@ -7,6 +7,9 @@ ENV JAVA_OPTS=$JAVA_OPTS
 RUN groupadd -g 10014 choreo && \
     useradd --no-log-init --no-create-home --uid 10014 --gid 10014 choreouser
 
+# Run Maven build
+RUN mvn clean install
+
 # Copy the application JAR file
 COPY target/backend-0.0.1-SNAPSHOT.jar dockerimage.jar
 
