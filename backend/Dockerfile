@@ -11,7 +11,7 @@ RUN groupadd -g 10014 choreo && \
 COPY target/backend-0.0.1-SNAPSHOT.jar dockerimage.jar
 
 # Change ownership of the JAR file to the non-root user
-RUN chown appuser:appuser dockerimage.jar
+RUN chown 10014:10014 dockerimage.jar
 
 # Expose port 8080
 EXPOSE 8080
