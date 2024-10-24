@@ -1,8 +1,7 @@
 # Stage 1: Build the application using Maven
-FROM maven:3.8.7-eclipse-temurin-19-alpine AS build
+FROM maven:3.8.7-eclipse-temurin-19 AS build
 
-# Set the working directory
-ADD . /app
+# Set the working directory inside the container
 WORKDIR /app
 
 # Run Maven build
@@ -22,23 +21,26 @@ ENV JAVA_OPTS=$JAVA_OPTS
 RUN groupadd -g 10014 choreo && \
     useradd --no-log-init --no-create-home --uid 10014 --gid 10014 choreouser
 
-
-
 # Copy the Maven project files to the working directory
-COPY pom.xml ./
+COPY .mvn/ .mvn
+COPY mvnw .
+COPY pom.xml .
 COPY src ./src
 
-# Copy the application JAR file to the final image
-COPY target/backend-0.0.1-SNAPSHOT.jar dockerimage.jar
+# Run Maven build to create the target folder and the JAR
+RUN ./mvnw clean package 
 
-# Change ownership of the JAR file to the non-root user
-RUN chown 10014:10014 dockerimage.jar
+# Stage 2: Build the final image with the JAR file
+FROM openjdk:21-jdk
 
-# Expose port 8080
+# Set the working directory for the final image
+WORKDIR /app
+
+# Copy the built JAR file from the build stage
+COPY --from=build /app/target/*.jar app.jar
+
+# Expose the application port
 EXPOSE 8080
 
-# Switch to the non-root user
-USER 10014
-
-# Set the entry point for the application
-ENTRYPOINT ["java", "-jar", "dockerimage.jar"]
+# Run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
