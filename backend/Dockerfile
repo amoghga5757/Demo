@@ -20,6 +20,9 @@ COPY mvnw .
 COPY pom.xml .
 COPY src ./src
 
+# Grant execute permission to the Maven wrapper script
+RUN chmod +x ./mvnw
+
 # Run Maven build to create the target folder and the JAR
 RUN ./mvnw clean package 
 
