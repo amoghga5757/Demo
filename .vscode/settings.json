@@ -1,3 +1,15 @@
 {
-  "java.compile.nullAnalysis.mode": "disabled"
+  "java.compile.nullAnalysis.mode": "disabled",
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5431,
+      "askForPassword": true,
+      "driver": "PostgreSQL",
+      "database": "demo_trial",
+      "username": "root",
+      "name": "demoing"
+    }
+  ]
 }

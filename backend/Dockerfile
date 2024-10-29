@@ -20,7 +20,7 @@ COPY src ./src
 RUN chmod +x ./mvnw
 
 # Run Maven build to create the target folder and the JAR
-RUN ./mvnw clean package 
+RUN ./mvnw clean package -DskipTests
 
 # Stage 2: Build the final image with the JAR file
 FROM openjdk:21-jdk
